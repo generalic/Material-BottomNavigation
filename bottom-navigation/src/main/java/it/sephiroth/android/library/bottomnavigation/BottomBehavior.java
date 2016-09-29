@@ -380,7 +380,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         @Override
         boolean onDependentViewChanged(final CoordinatorLayout parent, final BottomNavigation navigation) {
             log(TAG, VERBOSE, "onDependentViewChanged");
-            layoutParams.bottomMargin = height;
+            layoutParams.bottomMargin = bottomMargin + height;
             return true;
         }
     }
@@ -398,9 +398,9 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             final float t = Math.max(0, navigation.getTranslationY() - height);
 
             if (bottomInset > 0) {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - t);
+                layoutParams.bottomMargin = (int) (height - t);
             } else {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - navigation.getTranslationY());
+                layoutParams.bottomMargin = (int) (height - navigation.getTranslationY());
             }
             child.requestLayout();
             return true;
