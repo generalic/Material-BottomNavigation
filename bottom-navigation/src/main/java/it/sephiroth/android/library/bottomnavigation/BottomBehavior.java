@@ -374,13 +374,13 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         final int bottomMargin;
         final int height;
         final int bottomInset;
-        protected static BottomMarginProvider bottomMarginProvider;
+        static BottomMarginProvider bottomMarginProvider;
 
         DependentView(V child, final int height, final int bottomInset) {
             this.child = child;
             this.layoutParams = (MarginLayoutParams) child.getLayoutParams();
             this.bottomMargin = layoutParams.bottomMargin;
-            this.bottomMarginProvider = BottomMarginProvider.getInstance(layoutParams.bottomMargin);
+            bottomMarginProvider = BottomMarginProvider.getInstance(layoutParams.bottomMargin);
             this.height = height;
             this.bottomInset = bottomInset;
         }
@@ -426,6 +426,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             } else {
                 layoutParams.bottomMargin = (int) (bottomMarginProvider.getBottomMargin() + height - navigation.getTranslationY());
             }
+
             child.requestLayout();
             return true;
         }
