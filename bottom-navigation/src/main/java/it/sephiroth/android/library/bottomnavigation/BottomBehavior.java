@@ -356,11 +356,11 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             this.bottomMargin = bottomMargin;
         }
 
-        public int getBottomMargin() {
+        int getBottomMargin() {
             return bottomMargin;
         }
 
-        public final static BottomMarginProvider getInstance(final int bottomMargin) {
+        static BottomMarginProvider getInstance(final int bottomMargin) {
             if (INSTANCE == null) {
                 INSTANCE = new BottomMarginProvider(bottomMargin);
             }
