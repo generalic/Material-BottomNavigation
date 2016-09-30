@@ -346,17 +346,41 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
+    private final static class BottomMarginProvider {
+
+        private static BottomMarginProvider INSTANCE;
+
+        private final int bottomMargin;
+
+        private BottomMarginProvider(final int bottomMargin) {
+            this.bottomMargin = bottomMargin;
+        }
+
+        public int getBottomMargin() {
+            return bottomMargin;
+        }
+
+        public final static BottomMarginProvider getInstance(final int bottomMargin) {
+            if (INSTANCE == null) {
+                INSTANCE = new BottomMarginProvider(bottomMargin);
+            }
+            return INSTANCE;
+        }
+    }
+
     abstract static class DependentView<V extends View> {
         final V child;
         final MarginLayoutParams layoutParams;
         final int bottomMargin;
         final int height;
         final int bottomInset;
+        protected static BottomMarginProvider bottomMarginProvider;
 
         DependentView(V child, final int height, final int bottomInset) {
             this.child = child;
             this.layoutParams = (MarginLayoutParams) child.getLayoutParams();
             this.bottomMargin = layoutParams.bottomMargin;
+            this.bottomMarginProvider = BottomMarginProvider.getInstance(layoutParams.bottomMargin);
             this.height = height;
             this.bottomInset = bottomInset;
         }
@@ -398,12 +422,11 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
             final float t = Math.max(0, navigation.getTranslationY() - height);
 
             if (bottomInset > 0) {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - t);
+                layoutParams.bottomMargin = (int) (bottomMarginProvider.getBottomMargin() + height - t);
             } else {
-                layoutParams.bottomMargin = (int) (bottomMargin + height - navigation.getTranslationY());
+                layoutParams.bottomMargin = (int) (bottomMarginProvider.getBottomMargin() + height - navigation.getTranslationY());
             }
             child.requestLayout();
-            layoutParams.bottomMargin -= bottomMargin;
             return true;
         }
 
