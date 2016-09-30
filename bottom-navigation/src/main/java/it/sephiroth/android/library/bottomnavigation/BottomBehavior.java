@@ -348,7 +348,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
     private final static class BottomMarginProvider {
 
-        private static BottomMarginProvider INSTANCE;
+        private static BottomMarginProvider instance;
 
         private final int bottomMargin;
 
@@ -361,10 +361,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
 
         static BottomMarginProvider getInstance(final int bottomMargin) {
-            if (INSTANCE == null) {
-                INSTANCE = new BottomMarginProvider(bottomMargin);
+            if (instance == null) {
+                instance = new BottomMarginProvider(bottomMargin);
             }
-            return INSTANCE;
+            return instance;
         }
     }
 
