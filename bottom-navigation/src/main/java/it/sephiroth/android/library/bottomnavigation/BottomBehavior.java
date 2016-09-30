@@ -346,7 +346,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
-    private final static class BottomMarginProvider {
+    private static final class BottomMarginProvider {
 
         private static BottomMarginProvider instance;
 
