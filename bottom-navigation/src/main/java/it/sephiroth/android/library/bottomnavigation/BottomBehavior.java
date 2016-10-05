@@ -347,9 +347,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
     }
 
     private static final class BottomMarginProvider {
-
         private static BottomMarginProvider instance;
-
         private final int bottomMargin;
 
         private BottomMarginProvider(final int bottomMargin) {
@@ -372,7 +370,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         final V child;
         final MarginLayoutParams layoutParams;
         final int bottomMargin;
-        final int height;
+        int height;
         final int bottomInset;
         static BottomMarginProvider bottomMarginProvider;
 
@@ -434,6 +432,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         @Override
         void onDestroy() { }
     }
+
+    private static boolean fromSnackBarDepentedView;
 
     private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
         private static final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
