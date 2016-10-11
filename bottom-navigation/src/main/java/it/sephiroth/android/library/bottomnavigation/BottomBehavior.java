@@ -188,6 +188,7 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         } else if (SnackbarLayout.class.isInstance(dependency)) {
             snackbarDependentView = null;
             if (null != fabDependentView) {
+                resetBottomMargin = false;
                 fabDependentView.onDependentViewChanged(parent, child);
             }
         }
@@ -407,6 +408,8 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         }
     }
 
+    private static boolean resetBottomMargin;
+
     private static class FabDependentView extends DependentView<View> {
         private static final String TAG = BottomBehavior.TAG + "." + FabDependentView.class.getSimpleName();
 
@@ -425,6 +428,10 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
                 layoutParams.bottomMargin = (int) (bottomMarginProvider.getBottomMargin() + height - navigation.getTranslationY());
             }
 
+            if (resetBottomMargin) {
+                layoutParams.bottomMargin = bottomMarginProvider.getBottomMargin();
+            }
+
             child.requestLayout();
             return true;
         }
@@ -433,11 +440,11 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
         void onDestroy() { }
     }
 
-    private static boolean fromSnackBarDepentedView;
-
     private static class SnackBarDependentView extends DependentView<SnackbarLayout> {
         private static final String TAG = BottomBehavior.TAG + "." + SnackBarDependentView.class.getSimpleName();
-        private int snackbarHeight = -1;
+        private int snackBarHeight = -1;
+
+        private boolean visibleSwitch = false;
 
         SnackBarDependentView(final SnackbarLayout child, final int height, final int bottomInset) {
             super(child, height, bottomInset);
@@ -458,20 +465,36 @@ public class BottomBehavior extends VerticalScrollingBehavior<BottomNavigation> 
 
             //scrollEnabled = false;
             final boolean expanded = navigation.getTranslationY() == 0;
-            if (snackbarHeight == -1) {
-                snackbarHeight = child.getHeight();
+            if (snackBarHeight == -1) {
+                snackBarHeight = child.getHeight();
             }
 
             log(TAG, VERBOSE, "snack.height:%d, nav.height: %d, snack.y:%g, nav.y:%g, expanded: %b",
-                snackbarHeight,
+                snackBarHeight,
                 height,
                 child.getTranslationY(),
                 navigation.getTranslationY(),
                 expanded
             );
 
+            if (visibleSwitch) {
+                navigation.setVisibility(View.GONE);
+            }
+
             final float maxScroll = Math.max(0, navigation.getTranslationY() - bottomInset);
             layoutParams.bottomMargin = (int) (height - maxScroll);
+
+            for (int i = 0, n = parent.getChildCount(); i < n; i++) {
+                View view = parent.getChildAt(i);
+                if (view instanceof FloatingActionButton) {
+                    FloatingActionButton fab = (FloatingActionButton) view;
+                    MarginLayoutParams layoutParams = (MarginLayoutParams) fab.getLayoutParams();
+                    layoutParams.bottomMargin = bottomMarginProvider.getBottomMargin();
+                    resetBottomMargin = true;
+                    break;
+                }
+            }
+
             child.requestLayout();
 
             return true;
